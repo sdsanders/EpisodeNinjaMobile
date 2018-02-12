@@ -1,22 +1,21 @@
 import React from 'react';
-import { Text, Image, StyleSheet, View } from 'react-native';
+import { Text, Image, StyleSheet, View, Keyboard } from 'react-native';
 import {
   Container,
-  Header,
   Content,
   Item,
   Input,
   Card,
-  Thumbnail,
-  Body,
   Icon,
-  Title,
-  List,
-  ListItem
+  CardItem
 } from 'native-base';
 import debounce from 'debounce';
 
 export default class Search extends React.Component {
+  static navigationOptions = {
+    title: 'episode.ninja',
+  };
+
   constructor(props) {
     super(props);
 
@@ -36,34 +35,43 @@ export default class Search extends React.Component {
     this.setState({results});
   }
 
+  goToShow(show) {
+    console.log('going to show');
+    Keyboard.dismiss();
+    this.props.navigation.navigate('Show', {
+      slug: show.slug,
+      seriesName: show.seriesName
+    });
+  }
+
   render() {
     return (
       <Container>
-        <Header>
-          <Body>
-            <Title>Episode Ninja</Title>
-          </Body>
-        </Header>
         <Content style={styles.content}>
+          <Text style={{textAlign: 'center', fontSize: 32}}>Find the best episodes of any TV show</Text>
           <Card searchBar rounded>
             <Item>
               <Icon name="ios-search" style={{marginLeft: 5}} />
-              <Input placeholder="Search" onChangeText={(text) => {this.handleChange(text)}} />
+              <Input
+                placeholder="Search for a show"
+                onChangeText={(text) => {this.handleChange(text)}}
+              />
             </Item>
-          </Card>
-
-          <List>
             {
               this.state.results.map((show, index) => (
-                <ListItem avatar key={index}>
-                  <Thumbnail square size={80} source={{ uri: `https://cdn.episode.ninja/file/episodeninja/${show.id}-thumb.jpg` }} />
-                  <Body>
-                    <Text style={{fontSize: 18}}>{show.seriesName}</Text>
-                  </Body>
-                </ListItem>
+                <CardItem button
+                  key={index} onPress={() => {this.goToShow(show)}}
+                  style={{paddingTop: 4, paddingBottom: 4, paddingLeft: 8}}
+                >
+                  <Image
+                    style={{height: 54, width: 97, marginRight: 10}}
+                    source={{ uri: `https://cdn.episode.ninja/file/episodeninja/${show.id}-thumb.jpg` }}
+                  />
+                  <Text style={{fontSize: 18}}>{show.seriesName}</Text>
+                </CardItem>
               ))
             }
-          </List>
+          </Card>
         </Content>
       </Container>
     );
