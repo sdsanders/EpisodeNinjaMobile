@@ -7,7 +7,9 @@ import {
   Input,
   Card,
   Icon,
-  CardItem
+  CardItem,
+  H2,
+  H3
 } from 'native-base';
 import debounce from 'debounce';
 
@@ -20,7 +22,9 @@ export default class Search extends React.Component {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      popular: [],
+      recent: []
     };
 
     this.handleChange = debounce(this.search, 500);
@@ -35,6 +39,14 @@ export default class Search extends React.Component {
     this.setState({results});
   }
 
+  async getFeaturedShows () {
+    const { popular, recent } = await (
+      await fetch(`https://episodes.stevendsanders.com/featured`)
+    ).json();
+
+    this.setState({ popular, recent });
+  }
+
   goToShow(show) {
     console.log('going to show');
     Keyboard.dismiss();
@@ -42,6 +54,10 @@ export default class Search extends React.Component {
       slug: show.slug,
       seriesName: show.seriesName
     });
+  }
+
+  componentDidMount() {
+    this.getFeaturedShows();
   }
 
   render() {
@@ -72,6 +88,38 @@ export default class Search extends React.Component {
               ))
             }
           </Card>
+          <H2 style={styles.heading}>Popular Shows</H2>
+          {
+            this.state.popular.map((show, index) => (
+              <Card key={index}>
+                <CardItem cardBody button onPress={() => {this.goToShow(show)}}>
+                  <Image
+                    source={{uri: `https://cdn.episode.ninja/file/episodeninja/${show.id}-thumb.jpg`}}
+                    style={{height: 200, width: null, flex: 1}}
+                  />
+                </CardItem>
+                <CardItem>
+                  <H3 style={styles.cardHeading}>{show.seriesName}</H3>
+                </CardItem>
+              </Card>
+            ))
+          }
+          <H2 style={styles.heading}>Recently Added Shows</H2>
+          {
+            this.state.recent.map((show, index) => (
+              <Card key={index}>
+                <CardItem cardBody button onPress={() => {this.goToShow(show)}}>
+                  <Image
+                    source={{uri: `https://cdn.episode.ninja/file/episodeninja/${show.id}-thumb.jpg`}}
+                    style={{height: 200, width: null, flex: 1}}
+                  />
+                </CardItem>
+                <CardItem>
+                  <H3 style={styles.cardHeading}>{show.seriesName}</H3>
+                </CardItem>
+              </Card>
+            ))
+          }
         </Content>
       </Container>
     );
@@ -82,4 +130,11 @@ const styles = StyleSheet.create({
   content: {
     padding: 8
   },
+  heading: {
+    marginTop: 16
+  },
+  cardHeading: {
+    marginBottom: 8,
+    marginTop: 8
+  }
 });
