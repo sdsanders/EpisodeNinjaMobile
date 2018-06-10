@@ -32,7 +32,7 @@ export default class Search extends React.Component {
   async componentWillMount() {
     const { params } = this.props.navigation.state;
     const slug = params ? params.slug : null;
-    const show = await (await fetch(`https://episodes.stevendsanders.com/episodes/${slug}`)).json();
+    const show = await (await fetch(`https://api.episode.ninja/episodes/${slug}`)).json();
     this.setState({show});
   }
 

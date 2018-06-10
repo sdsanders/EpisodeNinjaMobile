@@ -34,14 +34,14 @@ export default class Search extends React.Component {
     if (!query) {
       return;
     }
-    let results = await (await fetch(`https://episodes.stevendsanders.com/search/${encodeURIComponent(query)}`)).json();
+    let results = await (await fetch(`https://api.episode.ninja/search/${encodeURIComponent(query)}`)).json();
     results = results || [];
     this.setState({results});
   }
 
   async getFeaturedShows () {
     const { popular, recent } = await (
-      await fetch(`https://episodes.stevendsanders.com/featured`)
+      await fetch(`https://api.episode.ninja/featured`)
     ).json();
 
     this.setState({ popular, recent });
