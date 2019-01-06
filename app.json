@@ -1,5 +1,17 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
-  }
+    "name": "Episode Ninja",
+    "icon": "./icon.png",
+    "version": "1.0.0",
+    "slug": "episode-ninja",
+    "sdkVersion": "25.0.0",
+    "ios": {
+      "bundleIdentifier": "com.episodeninja.episodeninja"
+    },
+    "android": {
+      "package": "com.episodeninja.episodeninja"
+    }
+  },
+  "name": "EpisodeNinjaMobile",
+  "displayName": "Episode Ninja"
 }
